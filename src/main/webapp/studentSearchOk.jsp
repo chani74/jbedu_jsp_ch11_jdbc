@@ -11,12 +11,10 @@
 <%
 	request.setCharacterEncoding("utf-8");
 
-	String sname = request.getParameter("sname");
-	String sgrade = request.getParameter("sgrade");
-	String saddr = request.getParameter("saddr");
+	String hakbun = request.getParameter("hakbun");
 
-	String strSQL = "INSERT INTO student (name, grade, address) ";
-	strSQL += " VALUES ('"+sname+"',"+sgrade+",'"+saddr+"')" ;
+	String strSQL = "select * from student ";
+	strSQL += " where hakbun = "+hakbun+" " ;
 
 
 
@@ -28,6 +26,8 @@
 	
 	Connection conn = null ; //DB 와의 커넥션을 초기값 null 로 해서 생성
 	Statement stmt = null ;
+	ResultSet rs = null ; 
+	
 	
 	try {
 		//2.드라이버 로딩
@@ -37,14 +37,22 @@
 		stmt = conn.createStatement();
 		//4. 사용
 		
-		int count = stmt.executeUpdate(strSQL);
-		if ( count == 1 ) {
-			out.println("회원가입 성공"+strSQL);		
-		} else {
-			out.println("회원가입 실패!!");
+		rs = stmt.executeQuery(strSQL);
+
+		while ( rs.next()) {
+			
+			hakbun = rs.getInt("hakbun");
+			String name = rs.getString("name"); 
+			int grade = rs.getInt("grade");
+			String Address = rs.getString("address");
+		
+			if (name.equals(null)) {
+				out.println("검색하신 학번은 없는 학번입니다.");
+			} else {
+				out.println(hakbun + " / " + name + " / " + grade + " / " +Address);
+			}
 		}
 		
-		stmt.close();
 		
 	} catch(ClassNotFoundException e){
 		out.println(">>연결실패 : 드라이버 복사 필요!");
@@ -57,6 +65,10 @@
 	} finally {
 		//5. 닫기 
 		try {
+			if(rs!=null)						
+				rs.close();				
+			if(stmt!=null)						
+				stmt.close();				
 			if(conn!=null)						
 				conn.close();				
 		} catch (SQLException e) {
