@@ -11,12 +11,14 @@
 <%
 	request.setCharacterEncoding("utf-8");
 
-	String sname = request.getParameter("sname");
-	String sgrade = request.getParameter("sgrade");
-	String saddr = request.getParameter("saddr");
+	String sname = "테스트";
+	String sgrade = "23" ;
+	String saddr = "테스트";
 
 	String strSQL = "INSERT INTO student (name, grade, address) ";
-	strSQL += " VALUES ('"+sname+"',"+sgrade+",'"+saddr+"')" ;
+	strSQL += " VALUES ('"+sname+"',"+sgrade+",'"+saddr+"')," ;
+	strSQL += "  ('"+sname+"',"+sgrade+",'"+saddr+"')," ;
+	strSQL += "  ('"+sname+"',"+sgrade+",'"+saddr+"')" ;
 
 
 
@@ -39,9 +41,9 @@
 		
 		int count = stmt.executeUpdate(strSQL);
 		if ( count == 1 ) {
-			out.println("회원가입 성공"+strSQL);		
+			out.println("회원가입 성공"+String.valueOf(count));		
 		} else {
-			out.println("회원가입 실패!!");
+			out.println("회원가입 실패!!"+ String.valueOf(count));
 		}
 		
 		stmt.close();
